@@ -3,7 +3,7 @@ var ReactDOM = require('react-dom');
 var Backbone = require('backbone');
 
 var LoginComponent = require('./components/login.jsx').LoginComponent;
-var TodoComponent = require('./components/todo.jsx').TodoComponent;
+var TodoContainer = require('./components/todo.jsx').TodoContainer;
 var TodoCollection = require('./models/todos').TodoCollection;
 
 var AppRouter = Backbone.Router.extend({
@@ -15,17 +15,19 @@ var AppRouter = Backbone.Router.extend({
     this.username = '';
   },
   index: function(){
+    // where is the router? what variable contains the router?
+    console.log(this);
+
     ReactDOM.render(
+      // <LoginComponent awesomeSauce={this}/>
       React.createElement(LoginComponent, {router: this}),
       document.getElementById('app')
     );
   },
   todo: function(){
-    var collection = new TodoCollection();
-    collection.fetch();
-
+    console.log('todo route');
     ReactDOM.render(
-      React.createElement(TodoComponent, {collection: collection, username: this.username}),
+      React.createElement(TodoContainer, {router: this}),
       document.getElementById('app')
     );
   }

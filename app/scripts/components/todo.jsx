@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var React = require('react');
 var Backbone = require('backbone');
 require('backbone-react-component');
@@ -5,7 +6,7 @@ require('backbone-react-component');
 var TodoCollection = require('../models/todos').TodoCollection;
 var TemplateComponent = require('./template.jsx').TemplateComponent;
 
-var TodoFrom = React.createClass({
+var From = React.createClass({
   mixins: [Backbone.React.Component.mixin],
   getInitialState: function(){
     return {
@@ -18,7 +19,12 @@ var TodoFrom = React.createClass({
   },
   handleSubmit: function(e){
     e.preventDefault();
+    // this.props.collection.create({title: this.state.title});
     this.getCollection().create({title: this.state.title});
+    var newTodo = {
+      'title': this.state.title
+    };
+    this.props.addTodo({title: this.state.title});
     this.setState({title: ''});
   },
   render: function(){
@@ -31,12 +37,12 @@ var TodoFrom = React.createClass({
   }
 });
 
-var TodoListing = React.createClass({
+var List = React.createClass({
   mixins: [Backbone.React.Component.mixin],
   render: function(){
     var collection = this.getCollection();
     var listOfTodos = collection.map(function(todo){
-      return <li key={todo.get('_id') || todo.cid}>{todo.get('title')}</li>;
+      return <li key={todo.get("_id")}>{todo.get('username')} needs to do {todo.get('title')}</li>;
     });
 
     return (
@@ -47,9 +53,28 @@ var TodoListing = React.createClass({
   }
 });
 
+var FormAndListSection = React.createClass({
+  render: function(){
+    return (
+      <section>
+        <From addTodo={this.props.addTodo}/>
+        <List todos={this.props.todos}/>
+      </section>
+    )
+  }
+})
 
-var TodoComponent = React.createClass({
+
+var TodoContainer = React.createClass({
   mixins: [Backbone.React.Component.mixin],
+  getDefaultProps: function(){
+    var collection = new TodoCollection();
+    collection.fetch();
+
+    return {
+      collection: collection
+    };
+  },
   // getInitialState: function(){
   //   var collection = new TodoCollection();
   //
@@ -74,17 +99,39 @@ var TodoComponent = React.createClass({
   // update: function(){
   //   this.forceUpdate();
   // },
+  // getInitialState: function(){
+  //   return {
+  //     todos: []
+  //   }
+  // },
+  // componentWillMount: function(){
+  //   var self = this;
+  //   $.ajax('https://tiny-lasagna-server.herokuapp.com/collections/todos', {
+  //     success: function(todos){
+  //       self.setState({todos: todos});
+  //     }
+  //   });
+  // },
+  // addTodo: function(todo){
+  //   var todos = this.state.todos;
+  //   todo.username = this.props.router.username;
+  //
+  //   todos.push(todo);
+  //
+  //   this.setState({todos: todos});
+  // },
   render: function(){
     return (
       <TemplateComponent>
-        <h2>Hey {this.props.username}, Create a Todod</h2>
-        <TodoFrom/>
-        <TodoListing/>
+        <h2>Hey {this.props.router.username}, Create a Todod</h2>
+        <From />
+        <List />
+        {/*<FormAndListSection todos={this.state.todos} addTodo={this.addTodo}/>*/}
       </TemplateComponent>
     )
   }
 });
 
 module.exports = {
-  TodoComponent: TodoComponent
+  TodoContainer: TodoContainer
 }

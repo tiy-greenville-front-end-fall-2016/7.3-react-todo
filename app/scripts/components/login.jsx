@@ -6,7 +6,7 @@ function Directions(){
   return <p>Please login to create ToDos</p>
 }
 
-var LoginFrom = React.createClass({
+var LoginForm = React.createClass({
   getInitialState: function(){
     return {
       username: ''
@@ -25,6 +25,7 @@ var LoginFrom = React.createClass({
     this.setState({username: ''});
   },
   render: function(){
+    console.log(this.props.router);
     return (
       <form onSubmit={this.handleSubmit}>
         <input onChange={this.handleUsername} name="username" value={this.state.username} placeholder="Username" />
@@ -36,9 +37,11 @@ var LoginFrom = React.createClass({
 
 var LoginComponent = React.createClass({
   render: function(){
+    // where is the router stored?
+    console.log('router: ', this.props.router);
     return (
       <TemplateComponent>
-        <LoginFrom router={this.props.router}/>
+        <LoginForm router={this.props.router}/>
         <Directions />
       </TemplateComponent>
     )
