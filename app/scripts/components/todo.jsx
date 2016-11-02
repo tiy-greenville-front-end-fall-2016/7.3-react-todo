@@ -104,14 +104,15 @@ var TodoContainer = React.createClass({
   //     todos: []
   //   }
   // },
-  // componentWillMount: function(){
-  //   var self = this;
-  //   $.ajax('https://tiny-lasagna-server.herokuapp.com/collections/todos', {
-  //     success: function(todos){
-  //       self.setState({todos: todos});
-  //     }
-  //   });
-  // },
+  componentWillMount: function(){
+    var self = this;
+    $.ajax('https://tiny-lasagna-server.herokuapp.com/collections/todos', {
+      success: function(todos){
+        console.log(this);
+        self.setState({todos: todos});
+      }
+    });
+  },
   // addTodo: function(todo){
   //   var todos = this.state.todos;
   //   todo.username = this.props.router.username;
